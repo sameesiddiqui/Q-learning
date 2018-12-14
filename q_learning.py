@@ -81,7 +81,7 @@ def play_game(
     mode='ansi',
     ai='random'
 ):
-    print ("Playing {} with {} AI".format(environment, ai))
+    print ("Playing {} with {} AI".format(environment, str(ai)))
     env = gym.make(environment)
     # keep track of average score and average number of timesteps our agent takes to complete the game
     total_score = 0
@@ -99,10 +99,11 @@ def play_game(
             # otherwise follow a different policy
             if (ai == 'q_learning'):
                 action = np.argmax(q_table[curr_state])
-            elif (ai == 'greedy'):
-                action = greedy_4x4_bot(curr_state)
-            else: # fallback ai, take random action
-                action = env.action_space.sample()
+            elif (ai == 'random'):
+                action = env.action_space.sample() # fallback ai, take random action
+            else: 
+                action = ai(curr_state) # custom ai for game
+                
 
             curr_state, reward, done, info = env.step(action)
 
@@ -187,7 +188,8 @@ q_table_discounted = np.array([[0.11086028, 0.10873646, 0.11937905, 0.10764452],
  [0.46608636, 0.78706054, 0.6564961 , 0.47320564],
  [0.        , 0.        , 0.        , 0.        ]])
 
+# pass in mode='human' to display the game
 play_game('FrozenLake-v0', q_table, ai='q_learning')
 play_game('FrozenLake-v0', q_table_discounted, ai='q_learning')
-play_game('FrozenLake-v0', ai='greedy')
+play_game('FrozenLake-v0', ai=greedy_4x4_bot)
 play_game('FrozenLake-v0', ai='random')
