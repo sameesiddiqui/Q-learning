@@ -9,7 +9,8 @@ def learn_q_table(
     random_factor,
     num_episodes=100000,
     max_time_steps=1000,
-    logging_interval=500
+    logging_interval=500,
+    save_file="saved_q_table"
 ):
     env = gym.make(environment)
 
@@ -57,6 +58,8 @@ def learn_q_table(
             log_metrics(logging_interval, total_score, total_timesteps, episode)
             total_score = 0
             total_timesteps = 0
+
+	np.save(save_file, q_table)    
 
     print (q_table)
     env.close()
@@ -187,6 +190,9 @@ q_table_discounted = np.array([[0.11086028, 0.10873646, 0.11937905, 0.10764452],
  [0.21537173, 0.31379267, 0.49150142, 0.38470216],
  [0.46608636, 0.78706054, 0.6564961 , 0.47320564],
  [0.        , 0.        , 0.        , 0.        ]])
+
+# for reading in a previously saved q_table:
+## q_table =  np.load("saved_q_table.npy")
 
 # pass in mode='human' to display the game
 play_game('FrozenLake-v0', q_table, ai='q_learning')
