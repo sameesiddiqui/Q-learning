@@ -59,7 +59,7 @@ def learn_q_table(
             total_score = 0
             total_timesteps = 0
 
-	np.save(save_file, q_table)    
+	np.save(save_file, q_table)
 
     print (q_table)
     env.close()
@@ -104,9 +104,10 @@ def play_game(
                 action = np.argmax(q_table[curr_state])
             elif (ai == 'random'):
                 action = env.action_space.sample() # fallback ai, take random action
-            else: 
+            elif (ai == 'human'):	# allows us, the scientist to play the game.
+                action = int(input("select an action (int): "))
+            else:
                 action = ai(curr_state) # custom ai for game
-                
 
             curr_state, reward, done, info = env.step(action)
 
@@ -116,7 +117,7 @@ def play_game(
 
             if done:
                 break
-        
+
         if (mode == 'human'):
             print("score for episode: {}".format(score_for_episode))
 
@@ -144,7 +145,7 @@ def greedy_4x4_bot(curr_state):
     elif ((curr_state - 1) not in holes and (col - 1 >= 0)):
         action = 0 # move left
     else:
-        action = 3 # move up 
+        action = 3 # move up
 
     return action
 
