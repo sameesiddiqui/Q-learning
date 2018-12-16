@@ -84,7 +84,7 @@ def play_game(
         q_table=[],
         num_episodes=1000,
         max_time_steps=1000,
-        mode='ansi',
+        mode='human',
         ai='random'
 ):
     print("Playing {} with {} AI".format(environment, str(ai)))
