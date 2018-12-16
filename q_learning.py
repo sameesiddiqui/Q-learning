@@ -1,6 +1,8 @@
 import gym
 import numpy as np
 import random
+from IPython.display import clear_output
+from time import sleep
 
 def learn_q_table(
     environment,
@@ -59,7 +61,7 @@ def learn_q_table(
             total_score = 0
             total_timesteps = 0
 
-	np.save(save_file, q_table)
+    np.save(save_file, q_table)
 
     print (q_table)
     env.close()
@@ -90,6 +92,8 @@ def play_game(
     total_score = 0
     total_timesteps = 0
 
+    frames = [] # list of frames for playing video later
+
     for episode in range(num_episodes):
         curr_state = env.reset()
         score_for_episode = 0
@@ -107,7 +111,7 @@ def play_game(
             elif (ai == 'human'):	# allows us, the scientist to play the game.
                 action = int(input("select an action (int): "))
             else:
-                action = ai(curr_state) # custom ai for game
+                action = ai(curr_state) # custom ai for game: TODO not defined here, must be defiend...
 
             curr_state, reward, done, info = env.step(action)
 
@@ -115,8 +119,17 @@ def play_game(
                 print("move taken: {}".format(action))
             score_for_episode += reward
 
+			## save frame to frames...
+            frames.append({
+                'frame': env.render(mode="ansi"),
+                'state': curr_state,
+                'action': action,
+                'reward': reward
+            })
+
             if done:
                 break
+		#endfor
 
         if (mode == 'human'):
             print("score for episode: {}".format(score_for_episode))
@@ -126,8 +139,29 @@ def play_game(
 
     log_metrics(num_episodes, total_score, total_timesteps)
 
+	#print_frames(frames)
+
     # return average score
-    return (total_score / num_episodes)
+    # return (total_score / num_episodes)
+    #
+    # return video frames:
+    return frames
+#endplay_game
+
+def print_frames(frames):
+	for i, frame in enumerate(frames):
+		clear_output(wait=True)
+		print(frame['frame'].getvalue())
+		print(f"Timestep: {i + 1}")
+
+		print(f"State: {frame['state']}")
+		print(f"Action: {frame['action']}")
+		print(f"Reward: {frame['reward']}")
+		#sleep(.1)
+		sleep(.5)
+	#endfor
+#endprint_frames
+
 
 # greedy bot that simulates human behavior
 # makes moves that go closer to the goal without heading towards a hole or out of bounds
@@ -149,6 +183,11 @@ def greedy_4x4_bot(curr_state):
 
     return action
 
+##  The below code and comments have been block commented out. it is still here and not being deleted
+##		for reference.
+##	To run the learing procedure, use learningDriver.py
+##	To run the testing procedure, use testingDriver.py
+"""
 # learn the q_tables
 # uncomment to learn new q tables. make sure to comment out hard_codes q_tables below
 # q_table = learn_q_table('FrozenLake-v0', learning_rate=0.1, discount_factor=1, random_factor=0.1)
@@ -200,3 +239,4 @@ play_game('FrozenLake-v0', q_table, ai='q_learning')
 play_game('FrozenLake-v0', q_table_discounted, ai='q_learning')
 play_game('FrozenLake-v0', ai=greedy_4x4_bot)
 play_game('FrozenLake-v0', ai='random')
+"""
