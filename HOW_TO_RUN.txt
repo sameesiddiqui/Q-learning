@@ -1,0 +1,13 @@
+This directory contains files to train, test, and view the results of our Q-learning algorithm.
+
+We've already included trained Q-tables, but if you want to train our AI again, simply run:
+<python/python3> learningDriver.py <FrozenLake-v0/Taxi-v2>
+using your alias for python3 and the appropriate environment
+
+If you want to test run our AI on the same benchmarks included in the report, run:
+python testingDriver.py <environment>
+
+And finally if you want to visualize a single run of either game, run:
+python3 forVideo.py <environment> discounted=<True/False>
+
+This will perform a single simulation, so you may need to do multiple runs to see a failure/success.
